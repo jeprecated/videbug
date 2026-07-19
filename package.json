@@ -1,0 +1,49 @@
+{
+  "name": "videbug",
+  "version": "0.1.0",
+  "private": true,
+  "description": "One-call CLI that turns a screen recording into a validated, evidence-backed debugging handoff via an embedded Pi vision agent.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeprecated/videbug.git"
+  },
+  "homepage": "https://github.com/jeprecated/videbug#readme",
+  "bugs": {
+    "url": "https://github.com/jeprecated/videbug/issues"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "bin": {
+    "videbug": "dist/cli.js",
+    "video-to-debug": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "assets",
+    "schema",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check src tests scripts",
+    "test": "vitest run",
+    "schema:export": "node --experimental-strip-types scripts/export-schema.mjs",
+    "prepack": "npm run build"
+  },
+  "dependencies": {
+    "@earendil-works/pi-ai": "0.80.7",
+    "@earendil-works/pi-coding-agent": "0.80.7",
+    "@napi-rs/canvas": "0.1.65",
+    "typebox": "1.1.38"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@types/node": "22.10.2",
+    "typescript": "5.7.2",
+    "vitest": "2.1.8"
+  }
+}

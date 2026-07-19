@@ -1,0 +1,572 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://videbug/schema/analysis-result.v1.schema.json",
+  "title": "Videbug AnalysisResultV1",
+  "description": "A validated, evidence-backed debugging handoff produced from a screen recording. Every evidence citation references a deterministic source frame ID whose embedded presentation timestamp (PTS) is authoritative; the model never supplies source, provenance, or timing values. schemaVersion is the literal \"1\".",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "status",
+    "coverage",
+    "summary",
+    "beats",
+    "anomalies",
+    "handoff",
+    "source",
+    "provenance"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1"
+    },
+    "status": {
+      "anyOf": [
+        {
+          "type": "string",
+          "const": "complete"
+        },
+        {
+          "type": "string",
+          "const": "partial"
+        }
+      ]
+    },
+    "coverage": {
+      "type": "object",
+      "required": [
+        "analyzedStartMs",
+        "analyzedEndMs",
+        "uninspectedRanges",
+        "confidence"
+      ],
+      "properties": {
+        "analyzedStartMs": {
+          "type": "number"
+        },
+        "analyzedEndMs": {
+          "type": "number"
+        },
+        "uninspectedRanges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "startMs",
+              "endMs"
+            ],
+            "properties": {
+              "startMs": {
+                "type": "number"
+              },
+              "endMs": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "high"
+            },
+            {
+              "type": "string",
+              "const": "medium"
+            },
+            {
+              "type": "string",
+              "const": "low"
+            }
+          ],
+          "$id": "Confidence"
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "observedFailure",
+        "chronology"
+      ],
+      "properties": {
+        "observedFailure": {
+          "type": "string",
+          "minLength": 1
+        },
+        "chronology": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "beats": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "time",
+          "kind",
+          "observation",
+          "evidence",
+          "confidence",
+          "inferences"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^B\\d+$"
+          },
+          "time": {
+            "type": "object",
+            "required": [
+              "startMs",
+              "endMs",
+              "precisionMs"
+            ],
+            "properties": {
+              "startMs": {
+                "type": "number"
+              },
+              "endMs": {
+                "type": "number"
+              },
+              "precisionMs": {
+                "type": "number"
+              }
+            }
+          },
+          "kind": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "state"
+              },
+              {
+                "type": "string",
+                "const": "transition"
+              },
+              {
+                "type": "string",
+                "const": "transient"
+              }
+            ]
+          },
+          "observation": {
+            "type": "object",
+            "required": [
+              "summary",
+              "visibleText",
+              "motion"
+            ],
+            "properties": {
+              "summary": {
+                "type": "string",
+                "minLength": 1
+              },
+              "visibleText": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "motion": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "const": "none"
+                  },
+                  {
+                    "type": "string",
+                    "const": "local-animation"
+                  },
+                  {
+                    "type": "string",
+                    "const": "scroll"
+                  },
+                  {
+                    "type": "string",
+                    "const": "global-transition"
+                  },
+                  {
+                    "type": "string",
+                    "const": "unknown"
+                  }
+                ]
+              }
+            }
+          },
+          "transitionFromPrevious": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "frameId",
+                "ptsMs",
+                "role"
+              ],
+              "properties": {
+                "frameId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "ptsMs": {
+                  "type": "number"
+                },
+                "role": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "const": "representative"
+                    },
+                    {
+                      "type": "string",
+                      "const": "before"
+                    },
+                    {
+                      "type": "string",
+                      "const": "after"
+                    },
+                    {
+                      "type": "string",
+                      "const": "boundary"
+                    },
+                    {
+                      "type": "string",
+                      "const": "text-detail"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "high"
+              },
+              {
+                "type": "string",
+                "const": "medium"
+              },
+              {
+                "type": "string",
+                "const": "low"
+              }
+            ],
+            "$id": "Confidence"
+          },
+          "inferences": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "statement",
+                "basis"
+              ],
+              "properties": {
+                "statement": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "basis": {
+                  "type": "string",
+                  "const": "inference"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "anomalies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "severity",
+          "description",
+          "whySuspicious",
+          "beatIds",
+          "evidence",
+          "confidence",
+          "uncertainties"
+        ],
+        "properties": {
+          "category": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "loading"
+              },
+              {
+                "type": "string",
+                "const": "contradictory-state"
+              },
+              {
+                "type": "string",
+                "const": "persistent-overlay"
+              },
+              {
+                "type": "string",
+                "const": "failed-action"
+              },
+              {
+                "type": "string",
+                "const": "incremental-render"
+              },
+              {
+                "type": "string",
+                "const": "navigation"
+              },
+              {
+                "type": "string",
+                "const": "other"
+              }
+            ]
+          },
+          "severity": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "info"
+              },
+              {
+                "type": "string",
+                "const": "warning"
+              },
+              {
+                "type": "string",
+                "const": "error"
+              }
+            ]
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1
+          },
+          "whySuspicious": {
+            "type": "string",
+            "minLength": 1
+          },
+          "beatIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "frameId",
+                "ptsMs",
+                "role"
+              ],
+              "properties": {
+                "frameId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "ptsMs": {
+                  "type": "number"
+                },
+                "role": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "const": "representative"
+                    },
+                    {
+                      "type": "string",
+                      "const": "before"
+                    },
+                    {
+                      "type": "string",
+                      "const": "after"
+                    },
+                    {
+                      "type": "string",
+                      "const": "boundary"
+                    },
+                    {
+                      "type": "string",
+                      "const": "text-detail"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "inference": {
+            "type": "string"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "high"
+              },
+              {
+                "type": "string",
+                "const": "medium"
+              },
+              {
+                "type": "string",
+                "const": "low"
+              }
+            ],
+            "$id": "Confidence"
+          },
+          "uncertainties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "handoff": {
+      "type": "object",
+      "required": [
+        "reproductionSteps",
+        "suggestedInvestigations",
+        "uncertainties"
+      ],
+      "properties": {
+        "reproductionSteps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "suggestedInvestigations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "statement",
+              "kind"
+            ],
+            "properties": {
+              "statement": {
+                "type": "string",
+                "minLength": 1
+              },
+              "kind": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "const": "inference"
+                  },
+                  {
+                    "type": "string",
+                    "const": "action"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "uncertainties": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "basename",
+        "sha256",
+        "durationMs",
+        "width",
+        "height",
+        "streamIndex",
+        "averageFps"
+      ],
+      "properties": {
+        "basename": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "durationMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "streamIndex": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "averageFps": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "toolVersion",
+        "ffmpegVersion",
+        "analystModel",
+        "inspectionCalls",
+        "inspectedCells",
+        "fullResolutionFrames"
+      ],
+      "properties": {
+        "toolVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ffmpegVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "analystModel": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewerModel": {
+          "type": "string",
+          "minLength": 1
+        },
+        "inspectionCalls": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "inspectedCells": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "fullResolutionFrames": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

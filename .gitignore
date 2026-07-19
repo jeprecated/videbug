@@ -1,0 +1,41 @@
+# Devenv
+.devenv*
+devenv.local.nix
+devenv.local.yaml
+
+# direnv
+.direnv
+
+# Locally installed evaluation tools
+.tools/
+node_modules/
+.venv/
+
+# Generated evaluation artifacts and local videos
+input/
+evaluation/runs/
+evaluation/agent-reviews/artifacts/
+evaluation/reference/dense-4fps/
+evaluation/reference/contact-sheets/
+evaluation/reference/representatives/
+evaluation/normalized/video-debug-frame-pts/
+evaluation/report/assets/
+
+# Application build/test/runtime artifacts
+dist/
+coverage/
+.video-to-debug/
+tests/.artifacts/
+*.tsbuildinfo
+
+# Local control-plane and scratch state
+.agentleman/
+.frontloop/
+.pi-scratch.md
+
+# pre-commit
+.pre-commit-config.yaml
+
+# User-generated report output (sensitive; never tracked)
+/report.md
+/report.json
