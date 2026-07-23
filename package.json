@@ -1,6 +1,6 @@
 {
   "name": "videbug",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "One-call CLI that turns a screen recording into a validated, evidence-backed debugging handoff via an embedded Pi vision agent.",
   "license": "MIT",

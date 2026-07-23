@@ -14,8 +14,34 @@
     pkgs.stdenv.cc.cc.lib
   ];
 
+  scripts.videbug.exec = ''
+    set -euo pipefail
+    npm --prefix "$DEVENV_ROOT" run build --silent
+    exec node "$DEVENV_ROOT/dist/cli.js" "$@"
+  '';
+
+  scripts.install-local.exec = ''
+    set -euo pipefail
+    install_prefix="$HOME/.local"
+    npm install \
+      --global \
+      --prefix "$install_prefix" \
+      --package-lock=false \
+      --audit=false \
+      "$DEVENV_ROOT"
+    install_path="$install_prefix/bin/videbug"
+    echo "Installed latest checkout to $install_path"
+    "$install_path" --version
+    resolved="$(command -v videbug || true)"
+    if [ "$resolved" != "$install_path" ]; then
+      echo "Within this devenv, videbug intentionally resolves to the checkout runner: ''${resolved:-not found}"
+      echo "Outside the devenv, ensure $install_prefix/bin precedes other entries in PATH."
+    fi
+  '';
+
   enterShell = ''
-    echo "Product CLI: videbug (build first with npm run build)."
+    echo "Product CLI: videbug (automatically builds and runs this checkout)."
+    echo "Install this checkout locally with: install-local"
   '';
 
   enterTest = ''

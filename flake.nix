@@ -43,9 +43,9 @@
           cli-smoke = pkgs.runCommand "videbug-cli-smoke" { nativeBuildInputs = [ videbug ]; } ''
             export HOME="$TMPDIR/home"
             mkdir -p "$HOME"
-            videbug --version | grep -Fx '0.1.0'
+            videbug --version | grep -Fx '0.1.1'
             videbug --help | grep -F 'videbug <video> [options]'
-            video-to-debug --version | grep -Fx '0.1.0'
+            video-to-debug --version | grep -Fx '0.1.1'
             video-to-debug --help | grep -F 'videbug <video> [options]'
             touch "$out"
           '';
