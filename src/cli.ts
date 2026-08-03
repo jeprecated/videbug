@@ -27,6 +27,8 @@ export interface CliOptions {
 	output?: string;
 	model?: string;
 	reviewModel?: string;
+	/** User-authored guidance for the report's focus and presentation. */
+	prompt?: string;
 	mode: RunMode;
 	maxAgentTurns?: number;
 	/** Wall-clock process timeout in seconds; aborts the run and cleans up. */
@@ -73,6 +75,7 @@ Options:
   --stdout                        Print the report to stdout instead of a sibling file
   --model <provider/model[:think]>   Analyst model (default: your Pi default)
   --review-model <provider/model[:think]>  Reviewer model (default: analyst model)
+  --prompt <instruction>           Steer report focus, exclusions, or concision
   --mode standard|fast            standard = analyst + independent reviewer;
                                   fast = analyst only (default: standard)
   --max-agent-turns <n>           Cap agent turns per session
@@ -125,6 +128,7 @@ export function parseArgs(argv: string[]): ParsedCli {
 	let stdout = false;
 	let model: string | undefined;
 	let reviewModel: string | undefined;
+	let prompt: string | undefined;
 	let maxAgentTurns: number | undefined;
 	let timeoutSeconds: number | undefined;
 	let keepArtifacts: boolean | string | undefined;
@@ -179,6 +183,12 @@ export function parseArgs(argv: string[]): ParsedCli {
 			case "--review-model":
 				reviewModel = takeValue(token);
 				break;
+			case "--prompt": {
+				const value = takeValue(token).trim();
+				if (!value) throw new InvalidArgumentsError("Option --prompt requires a non-empty instruction.");
+				prompt = value;
+				break;
+			}
 			case "--max-agent-turns": {
 				const value = takeValue(token);
 				const n = Number(value);
@@ -232,6 +242,7 @@ export function parseArgs(argv: string[]): ParsedCli {
 	if (!dryRun && !stdout) options.output = output ?? defaultOutputPath(video, format);
 	if (model !== undefined) options.model = model;
 	if (reviewModel !== undefined) options.reviewModel = reviewModel;
+	if (prompt !== undefined) options.prompt = prompt;
 	if (maxAgentTurns !== undefined) options.maxAgentTurns = maxAgentTurns;
 	if (timeoutSeconds !== undefined) options.timeoutSeconds = timeoutSeconds;
 	if (keepArtifacts !== undefined) options.keepArtifacts = keepArtifacts;

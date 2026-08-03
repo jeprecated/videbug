@@ -56,6 +56,8 @@ export interface FastAnalysisOptions {
 	videoPath: string;
 	/** `provider/model[:thinking]` reference; a vision-capable model is required. Omit for the Pi default. */
 	model?: string;
+	/** User-authored guidance for the report's focus and presentation. */
+	prompt?: string;
 	maxAgentTurns?: number;
 	/** Wall-clock timeout for a single agent turn (ms). */
 	turnTimeoutMs?: number;
@@ -185,6 +187,7 @@ async function runInWorkspace(options: FastAnalysisOptions, workspace: RunWorksp
 			submit,
 			briefing: buildAnalystBriefing({
 				source: engine.source,
+				...(options.prompt !== undefined ? { prompt: options.prompt } : {}),
 				candidateSummary: context.status().uninspectedCandidates,
 				mandatoryWindows: context.mandatoryWindows.map((w) => ({
 					startMs: w.startMs,

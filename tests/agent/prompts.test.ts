@@ -5,6 +5,7 @@ import {
 	analystSystemPrompt,
 	buildAnalystBriefing,
 	buildRepairPrompt,
+	buildReviewerBriefing,
 	reviewerSystemPrompt,
 } from "../../src/agent/prompts.ts";
 
@@ -79,6 +80,12 @@ describe("analyst prompt/protocol", () => {
 		expect(prompt).toMatch(/dense .*not|not .*enough|does not satisfy|not sufficient/);
 	});
 
+	it("bounds user report guidance by the fixed inspection and evidence rules", () => {
+		const prompt = analystSystemPrompt().toLowerCase();
+		expect(prompt).toMatch(/user.*guidance/);
+		expect(prompt).toMatch(/never overrides|required inspection/);
+	});
+
 	it("calibrates a resolved loading/spinner as an informational observation, not a warning/failure", () => {
 		const prompt = analystSystemPrompt().toLowerCase();
 		expect(prompt).toMatch(/resolves?|resolved/);
@@ -144,6 +151,18 @@ describe("buildAnalystBriefing", () => {
 		expect(briefing).toContain("1000-1100ms");
 	});
 
+	it("includes user report guidance verbatim", () => {
+		const briefing = buildAnalystBriefing({
+			source: { basename: "clip.mp4", durationMs: 1000, width: 720, height: 1560, averageFps: 24 },
+			candidateSummary: [],
+			mandatoryWindows: [],
+			budgets: { rangeInspections: 12, fullResolutionFrames: 12, cells: 250 },
+			prompt: "Focus on the button click and page load.",
+		});
+		expect(briefing).toContain("User report guidance");
+		expect(briefing).toContain("Focus on the button click and page load.");
+	});
+
 	it("surfaces brief transient candidate clusters for high-density inspection", () => {
 		const briefing = buildAnalystBriefing({
 			source: { basename: "clip.mp4", durationMs: 128640, width: 500, height: 1080, averageFps: 14.7 },
@@ -155,6 +174,21 @@ describe("buildAnalystBriefing", () => {
 		expect(briefing.toLowerCase()).toMatch(/transient/);
 		expect(briefing).toContain("57097-57935ms");
 		expect(briefing.toLowerCase()).toMatch(/high density|samples>=12/);
+	});
+});
+
+describe("buildReviewerBriefing", () => {
+	it("gives the independent reviewer the same user report guidance", () => {
+		const briefing = buildReviewerBriefing({
+			source: { basename: "clip.mp4", durationMs: 1000, width: 720, height: 1560, averageFps: 24 },
+			candidateSummary: [],
+			mandatoryWindows: [],
+			budgets: { rangeInspections: 6, fullResolutionFrames: 6, cells: 100 },
+			draftJson: "{}",
+			prompt: "Be concise; just give an overview.",
+		});
+		expect(briefing).toContain("User report guidance");
+		expect(briefing).toContain("Be concise; just give an overview.");
 	});
 });
 

@@ -82,6 +82,8 @@ export interface StandardAnalysisOptions {
 	model?: string;
 	/** Reviewer `provider/model[:thinking]`. Omit to reuse the analyst model. */
 	reviewModel?: string;
+	/** User-authored guidance for the report's focus and presentation. */
+	prompt?: string;
 	maxAgentTurns?: number;
 	/** Wall-clock timeout for a single agent turn (ms). */
 	turnTimeoutMs?: number;
@@ -243,6 +245,7 @@ async function runInWorkspace(options: StandardAnalysisOptions, workspace: RunWo
 				submit,
 				briefing: buildAnalystBriefing({
 					...summaryFor(analystContext),
+					...(options.prompt !== undefined ? { prompt: options.prompt } : {}),
 					budgets: {
 						rangeInspections: analystContext.budgets.budgets.rangeInspections,
 						fullResolutionFrames: analystContext.budgets.budgets.fullResolutionFrames,
@@ -347,6 +350,7 @@ async function runInWorkspace(options: StandardAnalysisOptions, workspace: RunWo
 				submit: submitReview,
 				briefing: buildReviewerBriefing({
 					...summaryFor(reviewerContext),
+					...(options.prompt !== undefined ? { prompt: options.prompt } : {}),
 					budgets: {
 						rangeInspections: reviewerContext.budgets.budgets.rangeInspections,
 						fullResolutionFrames: reviewerContext.budgets.budgets.fullResolutionFrames,

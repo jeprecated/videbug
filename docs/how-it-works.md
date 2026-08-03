@@ -152,9 +152,11 @@ comes from.
 ### 4. Briefing (text only)
 
 The analyst is given a **text** briefing: source facts (basename, duration, resolution,
-fps), the candidate summary, the mandatory windows, and its allowance. **No frames are in
-the briefing.** The analyst has never seen the raw video and has no filesystem, shell,
-network, or code tools — only the five constrained inspection tools plus `submit_analysis`.
+fps), the candidate summary, the mandatory windows, its allowance, and optional user
+report guidance from `--prompt`. The guidance steers emphasis and presentation but cannot
+waive inspection or evidence rules. **No frames are in the briefing.** The analyst has
+never seen the raw video and has no filesystem, shell, network, or code tools — only the
+five constrained inspection tools plus `submit_analysis`.
 
 ### 5. The analyst loop (images cross the boundary here, INCREMENTALLY)
 

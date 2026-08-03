@@ -86,6 +86,16 @@ describe("parseArgs", () => {
 		}
 	});
 
+	it("accepts report guidance through --prompt", () => {
+		const spaced = parseArgs(["recording.mp4", "--prompt", "  focus on the button-to-load transition  "]);
+		if (spaced.kind === "run") expect(spaced.options.prompt).toBe("focus on the button-to-load transition");
+
+		const inline = parseArgs(["recording.mp4", "--prompt=be concise"]);
+		if (inline.kind === "run") expect(inline.options.prompt).toBe("be concise");
+
+		expect(() => parseArgs(["recording.mp4", "--prompt="])).toThrow(/prompt.*non-empty/i);
+	});
+
 	it("parses the --dry-run diagnostic flag and keeps diagnostics on stdout", () => {
 		const off = parseArgs(["recording.mp4"]);
 		if (off.kind === "run") expect(off.options.dryRun ?? false).toBe(false);

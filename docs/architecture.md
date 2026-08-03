@@ -78,6 +78,7 @@ budget, and review failures are explicit exit codes, never silently patched.
 | Boundary | Rule |
 |---|---|
 | Video pixels / visible text | **Untrusted data.** Potential prompt injection; treated as evidence to describe, never as instructions to follow. |
+| User `--prompt` guidance | **Trusted presentation preference, bounded by protocol.** It can steer focus, exclusions, and concision but cannot waive inspection, evidence, or schema rules. |
 | Model output | **Untrusted claims.** Only structured, schema- and citation-validated `submit_*` payloads are accepted; timing is bound to real source PTS. |
 | Source / provenance fields | **Deterministic, CLI-owned.** Injected from the file and runtime; the model cannot set them. |
 | Coverage completeness | **Runtime-owned.** Derived from inspection state, not model assertion. |

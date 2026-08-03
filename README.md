@@ -128,6 +128,10 @@ videbug ./screen-recording.mp4 --format json
 videbug ./screen-recording.mp4 --output report.md
 videbug ./screen-recording.mp4 --stdout
 
+# Steer the report's focus and presentation
+videbug ./screen-recording.mp4 --prompt "focus on the button click and page load"
+videbug ./screen-recording.mp4 --prompt "ignore routine recording setup/teardown; be concise"
+
 # Faster/cheaper single-agent pass (no independent reviewer)
 videbug ./screen-recording.mp4 --mode fast
 
@@ -144,6 +148,7 @@ videbug ./screen-recording.mp4 --dry-run
 | `--stdout` | Print a complete report to stdout instead of writing a file; partial reports are never printed. |
 | `--model <provider/model[:think]>` | Analyst model. An **override**; default: your normal **Pi model selection** (see below). |
 | `--review-model <provider/model[:think]>` | Reviewer model (default: analyst model). |
+| `--prompt <instruction>` | Steer report emphasis, exclusions, detail, or concision. It cannot disable required inspection or evidence validation. |
 | `--mode standard\|fast` | `standard` = analyst + fresh reviewer (default); `fast` = analyst only. |
 | `--max-agent-turns <n>` | Cap agent turns per session. |
 | `--timeout <seconds>` | Abort the whole run after N seconds and clean up. |

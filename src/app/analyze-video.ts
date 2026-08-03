@@ -143,6 +143,7 @@ async function runFast(options: CliOptions, io: AnalyzeIo): Promise<void> {
 		result = await runFastAnalysis({
 			videoPath: options.video,
 			...(options.model !== undefined ? { model: options.model } : {}),
+			...(options.prompt !== undefined ? { prompt: options.prompt } : {}),
 			...(options.maxAgentTurns !== undefined ? { maxAgentTurns: options.maxAgentTurns } : {}),
 			...(keepDir !== undefined ? { keepArtifactsDir: keepDir } : {}),
 			...(io.signal ? { signal: io.signal } : {}),
@@ -163,6 +164,7 @@ async function runStandard(options: CliOptions, io: AnalyzeIo): Promise<void> {
 		result = await runStandardAnalysis({
 			videoPath: options.video,
 			...(options.model !== undefined ? { model: options.model } : {}),
+			...(options.prompt !== undefined ? { prompt: options.prompt } : {}),
 			...(options.reviewModel !== undefined ? { reviewModel: options.reviewModel } : {}),
 			...(options.maxAgentTurns !== undefined ? { maxAgentTurns: options.maxAgentTurns } : {}),
 			...(keepDir !== undefined ? { keepArtifactsDir: keepDir } : {}),
